@@ -16,106 +16,93 @@ st.set_page_config(
 st.markdown("""
     <style>
     /* Global Reset & Typography */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     
     html, body, [class*="css"] {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Helvetica, Arial, sans-serif;
-        color: #1d1d1f;
-        background-color: #f5f5f7; /* Apple Light Gray Background */
+        background-color: #ffffff !important; /* Force white background */
+        color: #000000 !important; /* Force black text */
     }
 
     /* Main Container */
     .stApp {
-        background-color: #f5f5f7;
+        background-color: #ffffff !important;
     }
 
     /* Header Styling */
     h1 {
-        font-weight: 600;
+        font-weight: 700 !important;
         letter-spacing: -0.02em;
-        color: #1d1d1f;
+        color: #000000 !important;
         margin-bottom: 0.5em;
     }
     
-    p {
-        font-weight: 400;
-        color: #86868b; /* Apple Subtitle Gray */
-        font-size: 1.1em;
+    p, label, span {
+        font-weight: 500 !important;
+        color: #333333 !important; /* Dark gray for body text to ensure readability */
+        font-size: 1.1em !important;
     }
 
     /* File Uploader - elegant drop zone */
     [data-testid='stFileUploader'] {
-        background-color: #ffffff;
+        background-color: #f5f5f7 !important; /* Light gray background for contrast against white page */
         border-radius: 18px;
         padding: 30px;
-        border: 1px solid #d2d2d7;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-        transition: all 0.2s ease;
+        border: 2px dashed #d2d2d7;
+    }
+    
+    /* Force text color inside uploader */
+    [data-testid='stFileUploader'] section, 
+    [data-testid='stFileUploader'] div,
+    [data-testid='stFileUploader'] label {
+        color: #000000 !important;
     }
     
     [data-testid='stFileUploader']:hover {
-        border-color: #0071e3; /* iOS Blue Focus */
-        box-shadow: 0 4px 16px rgba(0, 113, 227, 0.1);
+        border-color: #0071e3;
+        background-color: #f0f0f5 !important;
     }
     
     /* Buttons - iOS Style */
     div.stButton > button {
-        background-color: #0071e3; /* iOS Blue */
-        color: white;
-        border-radius: 980px; /* Pill shape */
-        height: 50px;
-        padding: 0 30px;
-        font-size: 17px;
-        font-weight: 500;
+        background-color: #0071e3 !important; /* iOS Blue */
+        color: white !important;
+        border-radius: 12px;
+        height: 55px;
+        font-size: 18px !important;
+        font-weight: 600 !important;
         border: none;
-        box-shadow: none;
-        transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
         width: 100%;
-        margin-top: 10px;
+        margin-top: 20px;
     }
     
     div.stButton > button:hover {
-        background-color: #0077ED; /* Slightly lighter on hover */
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
-    }
-    
-    div.stButton > button:active {
-        transform: scale(0.98);
-        background-color: #006edb;
+        background-color: #0077ED !important;
+        color: white !important;
     }
     
     /* Secondary Button (Download) */
     div.stDownloadButton > button {
-        background-color: #ffffff;
-        color: #0071e3;
-        border: 1px solid #0071e3;
-        border-radius: 980px;
-        height: 50px;
-        font-size: 17px;
-        font-weight: 500;
+        background-color: #ffffff !important;
+        color: #0071e3 !important;
+        border: 2px solid #0071e3 !important;
+        border-radius: 12px;
+        height: 55px;
+        font-size: 18px !important;
+        font-weight: 600 !important;
         width: 100%;
     }
 
     div.stDownloadButton > button:hover {
-        background-color: #f5f9ff;
-        border-color: #0071e3;
-        color: #0071e3;
-    }
-
-    /* Progress Bar */
-    .stProgress > div > div > div > div {
-        background-color: #0071e3;
-    }
-
-    /* Cards/Success Messages */
-    .stSuccess, .stInfo, .stWarning, .stError {
-        border-radius: 14px;
-        border: none;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        background-color: #f5f9ff !important;
     }
     
-    /* Remove default streamlit menu for cleaner look */
+    /* Fix for drag label specifically */
+    .st-emotion-cache-1gulkj5 {
+       color: #000000 !important; 
+    }
+
+    /* Remove default streamlit branding hooks if possible */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     
