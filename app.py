@@ -7,104 +7,113 @@ from extract_images import process_pdf
 
 # Set page configuration
 st.set_page_config(
-    page_title="PDF Image Extractor",
-    page_icon="📷",
+    page_title="Glass Converter",
+    page_icon="✨",
     layout="centered"
 )
 
-# Apple-inspired Design System (CSS)
+# Glassmorphism Design System (CSS)
 st.markdown("""
     <style>
-    /* Global Reset & Typography */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Helvetica, Arial, sans-serif;
-        background-color: #ffffff !important; /* Force white background */
-        color: #000000 !important; /* Force black text */
-    }
-
-    /* Main Container */
+    /* Gradient Background */
     .stApp {
-        background-color: #ffffff !important;
+        background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); /* Purple to Blue Gradient */
+        background-attachment: fixed;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Header Styling */
+    /* Main "Glass" Card Container */
+    /* Target the main content block to look like a card */
+    .block-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        padding: 40px !important;
+        margin-top: 40px;
+        max-width: 700px;
+    }
+
+    /* Typography - Force White */
+    h1, h2, h3, p, span, label, div {
+        color: #ffffff !important;
+    }
+    
     h1 {
-        font-weight: 700 !important;
-        letter-spacing: -0.02em;
-        color: #000000 !important;
-        margin-bottom: 0.5em;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        text-align: center;
     }
     
-    p, label, span {
-        font-weight: 500 !important;
-        color: #333333 !important; /* Dark gray for body text to ensure readability */
-        font-size: 1.1em !important;
+    p {
+        text-align: center;
+        opacity: 0.9;
+        margin-bottom: 2rem;
     }
 
-    /* File Uploader - elegant drop zone */
+    /* File Uploader - Dashed Inner Zone */
     [data-testid='stFileUploader'] {
-        background-color: #f5f5f7 !important; /* Light gray background for contrast against white page */
-        border-radius: 18px;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 2px dashed rgba(255, 255, 255, 0.4);
+        border-radius: 16px;
         padding: 30px;
-        border: 2px dashed #d2d2d7;
-    }
-    
-    /* Force text color inside uploader */
-    [data-testid='stFileUploader'] section, 
-    [data-testid='stFileUploader'] div,
-    [data-testid='stFileUploader'] label {
-        color: #000000 !important;
+        transition: border 0.3s ease;
     }
     
     [data-testid='stFileUploader']:hover {
-        border-color: #0071e3;
-        background-color: #f0f0f5 !important;
+        border-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.1) !important;
     }
     
-    /* Buttons - iOS Style */
-    div.stButton > button {
-        background-color: #0071e3 !important; /* iOS Blue */
+    /* Default uploaded file list text styling */
+    section[data-testid="stFileUploader"] div {
         color: white !important;
-        border-radius: 12px;
-        height: 55px;
-        font-size: 18px !important;
-        font-weight: 600 !important;
-        border: none;
+    }
+    
+    /* Buttons - Glass Buttons */
+    div.stButton > button {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 50px;
+        height: 50px;
+        font-weight: 600;
         width: 100%;
-        margin-top: 20px;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
     }
     
     div.stButton > button:hover {
-        background-color: #0077ED !important;
-        color: white !important;
+        background: rgba(255, 255, 255, 0.3) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
-    /* Secondary Button (Download) */
     div.stDownloadButton > button {
-        background-color: #ffffff !important;
-        color: #0071e3 !important;
-        border: 2px solid #0071e3 !important;
-        border-radius: 12px;
-        height: 55px;
-        font-size: 18px !important;
-        font-weight: 600 !important;
+        background: #ffffff !important;
+        color: #7c3aed !important; /* Matches gradient purple */
+        border: none !important;
+        border-radius: 50px;
+        height: 50px;
+        font-weight: 700 !important;
         width: 100%;
     }
-
-    div.stDownloadButton > button:hover {
-        background-color: #f5f9ff !important;
-    }
     
-    /* Fix for drag label specifically */
-    .st-emotion-cache-1gulkj5 {
-       color: #000000 !important; 
+    div.stDownloadButton > button:hover {
+        background: #f3e8ff !important;
     }
 
-    /* Remove default streamlit branding hooks if possible */
+    /* Progress Bar */
+    .stProgress > div > div > div > div {
+        background-color: white;
+    }
+
+    /* Remove Default Streamlit Chrome */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     
     </style>
 """, unsafe_allow_html=True)
@@ -118,30 +127,27 @@ def zip_directory(folder_path, zip_path):
                 zipf.write(file_path, arcname)
 
 def main():
-    # Elegant Title Section
-    st.title("Image Extractor")
-    st.markdown("<p style='text-align: center; margin-top: -10px; margin-bottom: 40px;'>Effortlessly extract images from your PDF documents.</p>", unsafe_allow_html=True)
+    # Header
+    st.title("Glass Converter")
+    st.markdown("<p>Transform your files instantly</p>", unsafe_allow_html=True)
     
     # 1. Drag and Drop Zone
     uploaded_files = st.file_uploader(
-        "Drop your PDF files here", 
+        "Click or drag file\nSupports PDF", 
         type=['pdf'], 
         accept_multiple_files=True,
-        label_visibility="hidden"
+        label_visibility="visible"
     )
 
     # 2. Convert Button
-    if uploaded_files:
-        st.write(f"Selected {len(uploaded_files)} file{'s' if len(uploaded_files) > 1 else ''}")
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        convert_btn = st.button("Extract Images")
-
-    if convert_btn:
-        if not uploaded_files:
-            st.warning("Please upload a PDF file first.")
-        else:
+    # Spacing
+    st.write("")
+    
+    if uploaded_files:
+        st.markdown(f"<div style='text-align:center; margin-bottom:10px; opacity:0.8'>Ready to process {len(uploaded_files)} files</div>", unsafe_allow_html=True)
+        
+        if st.button("Convert Now"):
             # Create a progress bar
             progress_bar = st.progress(0)
             status_text = st.empty()
@@ -151,8 +157,6 @@ def main():
                  tempfile.TemporaryDirectory() as temp_output_dir:
                 
                 # Save uploaded files to temp input
-                pdf_paths = []
-                
                 total_files = len(uploaded_files)
                 processed_count = 0
                 
@@ -161,7 +165,7 @@ def main():
                     with open(file_path, "wb") as f:
                         f.write(uploaded_file.getbuffer())
                     
-                    status_text.markdown(f"<span style='color:#86868b'>Processing {uploaded_file.name}...</span>", unsafe_allow_html=True)
+                    status_text.markdown(f"<p style='margin-bottom:0'>Processing {uploaded_file.name}...</p>", unsafe_allow_html=True)
                     
                     # Run extraction logic
                     try:
@@ -173,7 +177,7 @@ def main():
                     progress_bar.progress(int(processed_count / total_files * 100))
 
                 # After all processing, zip the output
-                status_text.markdown("<span style='color:#0071e3'><b>All done! Preparing download...</b></span>", unsafe_allow_html=True)
+                status_text.markdown("<p style='font-weight:bold'>Success! Preparing download...</p>", unsafe_allow_html=True)
                 
                 zip_filename = "extracted_images.zip"
                 zip_path = os.path.join(temp_input_dir, zip_filename)
@@ -185,14 +189,17 @@ def main():
                     zip_data = f.read()
                 
                 # 3. Download Button
-                st.markdown("---")
+                st.write("")
                 st.download_button(
-                    label="Download All Images",
+                    label="Download Result",
                     data=zip_data,
                     file_name="extracted_images.zip",
                     mime="application/zip",
                     type="primary"
                 )
+    
+    # Footer
+    st.markdown("<p style='font-size: 0.8em; margin-top: 40px; letter-spacing: 2px; opacity: 0.6;'>SECURE • FAST • PRIVATE</p>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
